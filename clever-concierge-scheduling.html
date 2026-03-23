@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clever Offers — Schedule Your Concierge Call</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0A1628;
+    --blue: #1877D9;
+    --blue-light: #E8F2FD;
+    --blue-mid: #B8D4F5;
+    --ice: #F0F6FF;
+    --white: #FFFFFF;
+    --slate: #3D5A80;
+    --muted: #6B7F96;
+    --border: #D8E5F3;
+    --success: #16A34A;
+    --success-bg: #DCFCE7;
+    --text: #0F1F35;
+    --orange: #E05A1E;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Subtle background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 20%, rgba(24,119,217,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 80%, rgba(24,119,217,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .page-wrap {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .clever-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2rem;
+    justify-content: center;
+  }
+  .clever-logo {
+    background: var(--blue);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+  }
+  .clever-wordmark {
+    font-family: 'DM Serif Display', serif;
+    color: white;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+
+  /* Card */
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  /* Success banner */
+  .success-banner {
+    background: var(--blue);
+    padding: 20px 24px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .check-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .check-wrap svg { width: 20px; height: 20px; }
+  .banner-text h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: white;
+    margin-bottom: 2px;
+  }
+  .banner-text p {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.4;
+  }
+
+  /* Home pill */
+  .home-pill {
+    background: var(--ice);
+    margin: 20px 24px 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+  }
+  .home-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--blue-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .home-icon svg { width: 16px; height: 16px; }
+  .home-address {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .home-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  /* Form body */
+  .form-body { padding: 20px 24px 24px; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 10px;
+  }
+
+  /* Channel selector */
+  .channel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .channel-btn {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .channel-btn:hover { border-color: var(--blue-mid); background: var(--ice); }
+  .channel-btn.active {
+    border: 2px solid var(--blue);
+    background: var(--blue-light);
+  }
+  .channel-btn .icon-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--ice);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+  .channel-btn.active .icon-wrap { background: var(--blue-mid); }
+  .channel-btn svg { width: 16px; height: 16px; }
+  .channel-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .channel-sub {
+    font-size: 10.5px;
+    color: var(--muted);
+  }
+  .channel-btn.active .channel-name { color: var(--blue); }
+
+  /* Quick time chips */
+  .chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 16px;
+  }
+  .chip {
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    background: white;
+    transition: all 0.12s;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--blue-mid); color: var(--blue); background: var(--ice); }
+  .chip.active {
+    border: 2px solid var(--blue);
+    color: var(--blue);
+    background: var(--blue-light);
+    font-weight: 600;
+  }
+
+  /* Divider */
+  .or-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .or-line { flex: 1; height: 1px; background: var(--border); }
+  .or-text { font-size: 11px; color: var(--muted); }
+
+  /* Date/time pickers */
+  .dt-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .dt-row select {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: white;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7F96' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+  .dt-row select:focus { border-color: var(--blue); }
+
+  /* CTA */
+  .cta-btn {
+    width: 100%;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .cta-btn:hover { background: #1568c5; }
+  .cta-btn:active { transform: scale(0.99); }
+
+  .skip-link {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.12s;
+  }
+  .skip-link:hover { color: var(--text); }
+
+  /* Confirmation state */
+  .confirm-state {
+    display: none;
+    padding: 24px;
+    text-align: center;
+  }
+  .confirm-state.show { display: block; }
+  .confirm-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--success-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+  }
+  .confirm-icon svg { width: 26px; height: 26px; }
+  .confirm-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .confirm-sub {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .confirm-detail {
+    background: var(--ice);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .confirm-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+  }
+  .confirm-row .label { color: var(--muted); min-width: 55px; }
+  .confirm-row .val { color: var(--text); font-weight: 500; }
+  .concierge-note {
+    background: var(--blue-light);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--slate);
+    line-height: 1.55;
+    border: 1px solid var(--blue-mid);
+  }
+
+  /* Label */
+  .ab-note {
+    text-align: center;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+  }
+  .ab-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--blue);
+    opacity: 0.8;
+  }
+
+  /* Divider in form */
+  .form-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="clever-header">
+    <div class="clever-logo">clever</div>
+    <div class="clever-wordmark">Offers</div>
+  </div>
+
+  <div class="card">
+    <div class="success-banner">
+      <div class="check-wrap">
+        <svg viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="9" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          <path d="M6 10l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="banner-text">
+        <h2>We're on it</h2>
+        <p>Your Clever concierge will walk you through every option. When works for you?</p>
+      </div>
+    </div>
+
+    <div class="home-pill">
+      <div class="home-icon">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M2 7l6-5 6 5v7H2V7z" fill="#B8D4F5" stroke="#1877D9" stroke-width="1" stroke-linejoin="round"/>
+          <rect x="6" y="10" width="4" height="4" rx="0.5" fill="#1877D9" opacity=".5"/>
+          <rect x="6.5" y="5.5" width="3" height="3" rx="0.5" fill="#1877D9" opacity=".4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="home-address">4440 Canyon Dr, Hidden Hills CA 91302</div>
+        <div class="home-sub">3 bed · 3 bath · Submitted today</div>
+      </div>
+    </div>
+
+    <!-- Main form -->
+    <div class="form-body" id="form-body">
+      <div class="section-title">How would you like to connect?</div>
+      <div class="channel-grid">
+        <div class="channel-btn active" id="btn-phone" onclick="selectChannel('phone')">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M3 2h3l1 3-1.5 1.5a9 9 0 003 3L10 8l3 1v3a1 1 0 01-1 1A11 11 0 012 3a1 1 0 011-1z" stroke="#1877D9" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="channel-name">Phone call</div>
+          <div class="channel-sub">Speak directly</div>
+        </div>
+        <div class="channel-btn" id="btn-sms" onclick="selectChannel('sms')">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 16 16" fill="none">
+              <rect x="1.5" y="3" width="13" height="8" rx="2" stroke="#6B7F96" stroke-width="1.2"/>
+              <path d="M4 7h8M4 9h5" stroke="#6B7F96" stroke-width="1.1" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="channel-name">Text (SMS)</div>
+          <div class="channel-sub">Chat at your pace</div>
+        </div>
+      </div>
+
+      <div class="section-title">When should we reach out?</div>
+      <div class="chips-wrap">
+        <div class="chip active" onclick="selectChip(this)">In 5 min</div>
+        <div class="chip" onclick="selectChip(this)">In 10 min</div>
+        <div class="chip" onclick="selectChip(this)">In 15 min</div>
+        <div class="chip" onclick="selectChip(this)">Later today</div>
+      </div>
+
+      <div class="or-divider">
+        <div class="or-line"></div>
+        <div class="or-text">or pick a specific time</div>
+        <div class="or-line"></div>
+      </div>
+
+      <div class="dt-row">
+        <select id="sel-date">
+          <option>Today, Mar 22</option>
+          <option>Mon Mar 23</option>
+          <option>Tue Mar 24</option>
+          <option>Wed Mar 25</option>
+          <option>Thu Mar 26</option>
+        </select>
+        <select id="sel-time">
+          <option>10:00 AM</option>
+          <option>10:30 AM</option>
+          <option>11:00 AM</option>
+          <option>11:30 AM</option>
+          <option>12:00 PM</option>
+          <option>1:00 PM</option>
+          <option>2:00 PM</option>
+          <option>3:00 PM</option>
+          <option>4:00 PM</option>
+        </select>
+      </div>
+
+      <button class="cta-btn" id="cta-btn" onclick="confirm()">Confirm my call</button>
+      <span class="skip-link">I'll wait for Clever to reach out instead</span>
+    </div>
+
+    <!-- Confirmation state -->
+    <div class="confirm-state" id="confirm-state">
+      <div class="confirm-icon">
+        <svg viewBox="0 0 26 26" fill="none">
+          <circle cx="13" cy="13" r="12" fill="#DCFCE7"/>
+          <path d="M8 13l3.5 3.5L18 9" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="confirm-title" id="confirm-title">Your call is booked</div>
+      <div class="confirm-sub" id="confirm-sub">We've reserved time for your concierge to call you.</div>
+      <div class="confirm-detail">
+        <div class="confirm-row">
+          <span class="label">When</span>
+          <span class="val" id="conf-when">Today, 10:00 AM</span>
+        </div>
+        <div class="confirm-row">
+          <span class="label">How</span>
+          <span class="val" id="conf-how">Phone call</span>
+        </div>
+        <div class="confirm-row">
+          <span class="label">Home</span>
+          <span class="val">4440 Canyon Dr, Hidden Hills</span>
+        </div>
+      </div>
+      <div class="concierge-note" id="concierge-note">
+        Your concierge will come prepared with local market data, your home details, and both path options — cash offer vs. open market — so you can make an informed decision without the pressure.
+      </div>
+    </div>
+  </div>
+
+  <div class="ab-note">
+    <div class="ab-dot"></div>
+    A/B experiment — this page vs. cold outreach control
+  </div>
+</div>
+
+<script>
+  var channel = 'phone';
+  var selectedChip = null;
+
+  function selectChannel(ch) {
+    channel = ch;
+    ['phone','sms'].forEach(function(id) {
+      var btn = document.getElementById('btn-' + id);
+      btn.classList.remove('active');
+    });
+    document.getElementById('btn-' + ch).classList.add('active');
+    var cta = document.getElementById('cta-btn');
+    cta.textContent = ch === 'phone' ? 'Confirm my call' : 'Confirm my text time';
+  }
+
+  function selectChip(el) {
+    document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('active'); });
+    el.classList.add('active');
+    selectedChip = el.textContent;
+  }
+
+  function confirm() {
+    var date = document.getElementById('sel-date').value;
+    var time = document.getElementById('sel-time').value;
+    var when = selectedChip || (date + ' at ' + time);
+    document.getElementById('conf-when').textContent = when;
+    document.getElementById('conf-how').textContent = channel === 'phone' ? 'Phone call' : 'Text message (SMS)';
+    if (channel === 'sms') {
+      document.getElementById('confirm-title').textContent = 'Text time confirmed';
+      document.getElementById('confirm-sub').textContent = "We'll text you at your scheduled time — no unexpected calls.";
+    }
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('confirm-state').classList.add('show');
+  }
+</script>
+</body>
+</html>
