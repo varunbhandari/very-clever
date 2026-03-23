@@ -425,11 +425,22 @@
     }
   }
 
-  // Restore auth if navigating back within the same session (not a refresh)
-  if (sessionStorage.getItem('clever_auth') === '1') {
-    document.getElementById('gate').style.display = 'none';
-    document.getElementById('main').classList.add('show');
-  }
+  // Show main only if authenticated AND arriving via back/forward navigation (not a refresh)
+  (function() {
+    if (sessionStorage.getItem('clever_auth') !== '1') return;
+    var entries = performance.getEntriesByType('navigation');
+    var navType = entries.length ? entries[0].type : '';
+    // 'back_forward' = browser back/forward button or href same-tab navigation
+    // 'reload' = refresh — do NOT skip the gate
+    // 'navigate' = fresh load — do NOT skip the gate
+    if (navType === 'back_forward') {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('main').classList.add('show');
+    } else {
+      // Clear the flag so a subsequent back-nav also requires password
+      sessionStorage.removeItem('clever_auth');
+    }
+  })();
 </script>
 </body>
 </html>
