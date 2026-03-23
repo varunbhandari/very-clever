@@ -413,6 +413,7 @@
     var input = document.getElementById('pw-input');
     var error = document.getElementById('gate-error');
     if (input.value === 'veryclever') {
+      sessionStorage.setItem('clever_auth', '1');
       document.getElementById('gate').style.display = 'none';
       document.getElementById('main').classList.add('show');
     } else {
@@ -422,6 +423,12 @@
       input.style.borderColor = '#FCA5A5';
       setTimeout(function() { input.style.borderColor = ''; }, 1200);
     }
+  }
+
+  // Restore auth if navigating back within the same session (not a refresh)
+  if (sessionStorage.getItem('clever_auth') === '1') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('main').classList.add('show');
   }
 </script>
 </body>
