@@ -46,7 +46,7 @@
     align-items: center;
     justify-content: space-between;
     position: sticky;
-    top: 0;
+    top: 48px;
     z-index: 100;
     box-shadow: 0 2px 20px rgba(0,0,0,0.25);
   }
@@ -366,8 +366,65 @@
   }
   .update-note span { color: var(--blue); }
 </style>
+<style>
+  .back-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(10,22,40,0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .back-nav-left { display: flex; align-items: center; gap: 16px; }
+  .back-link {
+    display: flex; align-items: center; gap: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px; font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none; transition: color 0.15s;
+    padding: 5px 10px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .back-link:hover { color: white; border-color: rgba(255,255,255,0.25); }
+  .nav-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.12); }
+  .nav-brand { display: flex; align-items: center; gap: 8px; }
+  .nav-logo-pill {
+    background: #1877D9; color: white;
+    font-size: 11px; font-weight: 600;
+    padding: 2px 8px; border-radius: 5px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-brand-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px; color: rgba(255,255,255,0.4);
+  }
+  .nav-rec-pill {
+    background: rgba(13,148,136,0.2);
+    border: 1px solid rgba(13,148,136,0.3);
+    color: #5EEAD4;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 10px; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }</style>
 </head>
 <body>
+<div class="back-nav">
+  <div class="back-nav-left">
+    <a class="back-link" href="index.html">&#8592; Back to proposal</a>
+    <div class="nav-divider"></div>
+    <div class="nav-brand">
+      <div class="nav-logo-pill">clever</div>
+      <span class="nav-brand-label">Offers &mdash; Investor Platform</span>
+    </div>
+  </div>
+  <div class="nav-rec-pill">Rec 2 &mdash; Seller dashboard</div>
+</div>
+
 
 <div class="top-nav">
   <div class="nav-left">
